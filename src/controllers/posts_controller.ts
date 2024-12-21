@@ -112,6 +112,16 @@ export const getPostById = async (req: Request, res: Response) => {
   }
 }
 
+export const getPostsByUserId = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const posts = await Post.find({ userId: id });
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching posts' });
+  }
+}
+
 export const generatePost = async (req: Request, res: Response) => {
   // TODO
 };
@@ -123,5 +133,6 @@ export default {
   unLikePost,
   generatePost,
   getPosts,
-  getPostById
+  getPostById,
+  getPostsByUserId
 }

@@ -8,6 +8,8 @@ router.get('/', postController.getPosts);
 
 router.get('/:id', postController.getPostById);
 
+router.get('user/:id', postController.getPostsByUserId);
+
 router.post('/', authMiddleware, postController.createPost);
 
 router.post('/generate', authMiddleware, postController.generatePost);
