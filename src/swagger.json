@@ -158,6 +158,56 @@
         }
       }
     },
+    "/users/{userId}/photo": {
+      "put": {
+        "summary": "Upload a photo for the user",
+        "description": "This endpoint allows a user to upload a profile photo.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the user for whom the photo is being uploaded.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "photo",
+            "in": "formData",
+            "required": true,
+            "description": "The photo to upload for the user.",
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User photo successfully updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No photo uploaded or invalid file type"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
     "/posts": {
       "get": {
         "summary": "Get all posts",

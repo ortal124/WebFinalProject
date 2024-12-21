@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import Post from '../models/post_model';
-import { processPostsWithImages } from '../utils/downloadPosts'
+import { processPostsWithImages } from '../utils/download'
 
 export const createPost = async (req: Request, res: Response): Promise<void> => {
   try {
