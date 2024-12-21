@@ -1,0 +1,368 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "API Documentation",
+    "description": "Comprehensive API documentation for the application."
+  },
+  "securityDefinitions": {
+    "BearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "host": "localhost:3000",
+  "basePath": "",
+  "schemes": ["http"],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Register a new user",
+        "description": "Creates a new user account.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": { "type": "string" },
+                "password": { "type": "string" },
+                "email": { "type": "string" }
+              },
+              "required": ["username", "password", "email"]
+            }
+          }
+        ],
+        "responses": {
+          "201": { "description": "User registered successfully." },
+          "500": { "description": "Error registering user." }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "User login",
+        "description": "Authenticates a user and returns a token.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": { "type": "string" },
+                "password": { "type": "string" }
+              },
+              "required": ["username", "password"]
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Login successful." },
+          "401": { "description": "Invalid credentials." },
+          "500": { "description": "Error logging in." }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "User logout",
+        "description": "Logs out the authenticated user.",
+        "responses": {
+          "200": { "description": "Logout successful." },
+          "401": { "description": "Unauthorized." },
+          "500": { "description": "Error logging out." }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "summary": "Refresh authentication token",
+        "description": "Refresh the JWT token using the refresh token.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "refreshToken": { "type": "string" }
+              },
+              "required": ["refreshToken"]
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "New access token issued." },
+          "401": { "description": "Invalid or expired refresh token." }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/auth/profile/{id}": {
+      "get": {
+        "summary": "Get user profile",
+        "description": "Fetches profile details of a user by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": { "description": "User profile data." },
+          "404": { "description": "User not found." },
+          "500": { "description": "Error fetching user profile." }
+        }
+      }
+    },
+    "/posts": {
+      "get": {
+        "summary": "Get all posts",
+        "description": "Fetches a list of all posts with pagination.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "description": "Page number."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "description": "Number of posts per page."
+          }
+        ],
+        "responses": {
+          "200": { "description": "List of posts." },
+          "500": { "description": "Error fetching posts." }
+        }
+      },
+      "post": {
+        "summary": "Create a post",
+        "description": "Creates a new post.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": { "type": "string" },
+                "image": { "type": "string" }
+              },
+              "required": ["text"]
+            }
+          }
+        ],
+        "responses": {
+          "201": { "description": "Post created successfully." },
+          "500": { "description": "Error creating post." }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/posts/{id}": {
+      "get": {
+        "summary": "Get a post by ID",
+        "description": "Fetches a specific post by its ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The ID of the post to fetch."
+          }
+        ],
+        "responses": {
+          "200": { "description": "Post fetched successfully." },
+          "404": { "description": "Post not found." },
+          "500": { "description": "Error fetching post." }
+        }
+      },
+      "delete": {
+        "summary": "Delete a post",
+        "description": "Deletes a post by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The ID of the post to delete."
+          }
+        ],
+        "responses": {
+          "200": { "description": "Post deleted successfully." },
+          "401": { "description": "Unauthorized." },
+          "404": { "description": "Post not found." },
+          "500": { "description": "Error deleting post." }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/posts/{id}/like": {
+      "post": {
+        "summary": "Like a post",
+        "description": "Adds a like to a post.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Post liked successfully." },
+          "404": { "description": "Post not found." },
+          "500": { "description": "Error liking post." }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Unlike a post",
+        "description": "Removes a like from a post.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Post unliked successfully." },
+          "404": { "description": "Post not found." },
+          "500": { "description": "Error unliking post." }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/posts/generate": {
+      "post": {
+        "summary": "Generate a post",
+        "description": "Generates a new post with default content.",
+        "responses": {
+          "201": { "description": "Post generated successfully." },
+          "500": { "description": "Error generating post." }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/comments": {
+      "post": {
+        "summary": "Add a comment",
+        "description": "Adds a comment to a post.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "post": { "type": "string" },
+                "text": { "type": "string" }
+              },
+              "required": ["post", "text"]
+            }
+          }
+        ],
+        "responses": {
+          "201": { "description": "Comment added successfully." },
+          "500": { "description": "Error adding comment." }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/comments/{id}": {
+      "delete": {
+        "summary": "Delete a comment",
+        "description": "Deletes a comment by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Comment deleted successfully." },
+          "401": { "description": "Unauthorized." },
+          "404": { "description": "Comment not found." },
+          "500": { "description": "Error deleting comment." }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/comments/{postId}": {
+      "get": {
+        "summary": "Get comments for a post",
+        "description": "Fetches comments for a specific post by ID.",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": { "description": "List of comments." },
+          "500": { "description": "Error fetching comments." }
+        }
+      }
+    }
+  }
+}
