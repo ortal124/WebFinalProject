@@ -11,8 +11,4 @@ router.post("/refresh", authController.refresh);
 
 router.post("/logout", authController.logout);
 
-router.get('/profile/:id', authController.getUserProfile);
-
-router.post('/userPhoto', authController.addUserPhoto);
-
 export default router;
