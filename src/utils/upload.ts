@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
 });
 
 // Only allow image file types
-const fileFilter = (req:any, file:any, cb:any) => {
+export const fileFilter = (req:any, file:any, cb:any) => {
   if (file.mimetype.startsWith('image/')) {
     cb(null, true);
   } else {
