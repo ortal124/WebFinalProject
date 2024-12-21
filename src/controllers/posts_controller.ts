@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Post from '../models/post_model';
+import { processPostsWithImages } from '../utils/downloadPosts'
 
 export const createPost = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -31,9 +32,13 @@ export const getPosts = async (req: Request, res: Response) => {
       .skip((page - 1) * limit)  // Skip posts for pagination
       .limit(limit);  // Limit number of posts per page
 
+    
+    const downloadedPosts = await processPostsWithImages(posts);
+
     const totalPosts = await Post.countDocuments();
+
     res.json({
-      posts,
+      downloadedPosts,
       totalPosts,
       totalPages: Math.ceil(totalPosts / limit),
       currentPage: page,
@@ -114,7 +119,10 @@ export const getPostById = async (req: Request, res: Response) => {
       res.status(404).json({ error: 'Post not found' });
       return;
     }
-    res.status(200).json(post);
+
+    const downloadedPost = await processPostsWithImages([post]);
+
+    res.status(200).json(downloadedPost);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching posts' });
   }
@@ -124,7 +132,10 @@ export const getPostsByUserId = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const posts = await Post.find({ userId: id });
-    res.status(200).json(posts);
+
+    const downloadedPosts = await processPostsWithImages(posts);
+
+    res.status(200).json(downloadedPosts);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching posts' });
   }
