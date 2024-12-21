@@ -291,6 +291,21 @@
         ]
       }
     },
+    "/posts/user/{id}": {
+      "get": {
+        "summary": "Get posts by userId",
+        "description": "Get posts by userId",
+        "responses": {
+          "200": { "description": "Posts fetched successfully." },
+          "500": { "description": "Error fetching posts." }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
     "/comments": {
       "post": {
         "summary": "Add a comment",
