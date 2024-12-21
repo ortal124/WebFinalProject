@@ -113,7 +113,7 @@
         ]
       }
     },
-    "/auth/profile/{id}": {
+    "/users/profile/{id}": {
       "get": {
         "summary": "Get user profile",
         "description": "Fetches profile details of a user by ID.",
@@ -129,6 +129,32 @@
           "200": { "description": "User profile data." },
           "404": { "description": "User not found." },
           "500": { "description": "Error fetching user profile." }
+        }
+      }
+    },
+    "/users/username": {
+      "put": {
+        "summary": "update user username",
+        "description": "update username of a user by ID.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": { "type": "string" },
+                "userId": { "type": "string" }
+              },
+              "required": ["username", "userId"]
+            }
+          }
+        ],
+        "responses": {
+          "201": { "description": "username updated successfully." },
+          "404": { "description": "username doesnt exist." },
+          "500": { "description": "Error updating username." }
         }
       }
     },

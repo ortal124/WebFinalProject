@@ -176,28 +176,9 @@ const refresh = async (req: Request, res: Response) => {
     }
 };
 
-export const getUserProfile = async (req: Request, res: Response) => {
-    try {
-        const user = await userModel.findById(req.params.id);
-        if (!user) {
-            res.status(404).json({ error: 'User not found' });
-            return;
-        }
-        res.json(user);
-    } catch (error) {
-        res.status(500).json({ error: 'Error fetching user profile' });
-    }
-};
-
-export const addUserPhoto = async (req: Request, res: Response) => {
-    // TODO
-};
-
 export default {
     register,
     login,
     refresh,
-    logout, 
-    getUserProfile,
-    addUserPhoto
+    logout,
 };

@@ -10,5 +10,4 @@ router.delete("/:id", authMiddleware, commentsController.deleteComment);
 
 router.get('/:postId', commentsController.getCommentsPerPost);
 
-
 export default router;
