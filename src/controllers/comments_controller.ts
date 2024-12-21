@@ -1,15 +1,23 @@
 import { Request, Response } from 'express';
 import Comment from '../models/comment_model';
+import Post from '../models/post_model';
 
 export const addComment = async (req: Request, res: Response) => {
   try {
     const { post, text } = req.body;
     const { userId } = req.params;
+    
+    const postDoc = await Post.findById(post);
+    if (!postDoc) {
+      res.status(404).json({ error: 'Post not found' });
+      return;
+    }
 
     const comment = new Comment({ postId: post, text, userId });
     await comment.save();
     res.status(201).json(comment);
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error: 'Error adding comment' });
   }
 };
