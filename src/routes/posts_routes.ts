@@ -8,7 +8,7 @@ router.get('/', postController.getPosts);
 
 router.get('/:id', postController.getPostById);
 
-router.get('user/:id', postController.getPostsByUserId);
+router.get('/user/:id', postController.getPostsByUserId);
 
 router.post('/', authMiddleware, postController.createPost);
 
