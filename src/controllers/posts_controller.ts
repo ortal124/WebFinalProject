@@ -1,13 +1,22 @@
 import { Request, Response } from 'express';
 import Post from '../models/post_model';
+import { processPostsWithImages } from '../utils/download'
 
-export const createPost = async (req: Request, res: Response) => {
+export const createPost = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { text, image } = req.body;
+    if (!req.file) {
+      res.status(400).json({ message: 'No image uploaded' });
+      return;
+    }
+
+    const { text } = req.body;
+    const imageUrl = `/uploads/${req.file.filename}`;
     const { userId } = req.params;
 
-    const post = new Post({ text, image, userId: userId });
+    const post = new Post({ text, image: imageUrl, userId });
+
     await post.save();
+
     res.status(201).json(post);
   } catch (error) {
     res.status(500).json({ error: 'Error creating post' });
@@ -23,9 +32,13 @@ export const getPosts = async (req: Request, res: Response) => {
       .skip((page - 1) * limit)  // Skip posts for pagination
       .limit(limit);  // Limit number of posts per page
 
+    
+    const downloadedPosts = await processPostsWithImages(posts);
+
     const totalPosts = await Post.countDocuments();
+
     res.json({
-      posts,
+      downloadedPosts,
       totalPosts,
       totalPages: Math.ceil(totalPosts / limit),
       currentPage: page,
@@ -106,7 +119,10 @@ export const getPostById = async (req: Request, res: Response) => {
       res.status(404).json({ error: 'Post not found' });
       return;
     }
-    res.status(200).json(post);
+
+    const downloadedPost = await processPostsWithImages([post]);
+
+    res.status(200).json(downloadedPost);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching posts' });
   }
@@ -116,11 +132,55 @@ export const getPostsByUserId = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const posts = await Post.find({ userId: id });
-    res.status(200).json(posts);
+
+    const downloadedPosts = await processPostsWithImages(posts);
+
+    res.status(200).json(downloadedPosts);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching posts' });
   }
 }
+
+export const updatePostById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id, userId } = req.params;
+
+    const post = await Post.findById(id);
+    if (!post) {
+      res.status(404).json({ error: 'Post not found' });
+      return;
+    }
+
+    if (post.userId != userId) {
+      res
+        .status(401)
+        .json({ error: 'User is not authorized to delete post of another user' });
+      return
+    }
+
+    const { text } = req.body || ""; 
+    let imageUrl = undefined;
+    if (req.file) {
+      imageUrl = `/uploads/${req.file.filename}`;  // Construct the image URL
+    }
+
+    const updateFields: any = {};
+
+    if (text && text.trim()) {
+      updateFields.text = text;
+    }
+
+    if (imageUrl) {
+      updateFields.image = imageUrl;
+    }
+
+    const updatedPost = await Post.findByIdAndUpdate(id, updateFields, { new: true });
+
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    res.status(500).json({ error: 'Error updating post' });
+  }
+};
 
 export const generatePost = async (req: Request, res: Response) => {
   // TODO
@@ -134,5 +194,6 @@ export default {
   generatePost,
   getPosts,
   getPostById,
-  getPostsByUserId
+  getPostsByUserId,
+  updatePostById
 }
