@@ -1,13 +1,21 @@
 import { Request, Response } from 'express';
 import Post from '../models/post_model';
 
-export const createPost = async (req: Request, res: Response) => {
+export const createPost = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { text, image } = req.body;
+    if (!req.file) {
+      res.status(400).json({ message: 'No image uploaded' });
+      return;
+    }
+
+    const { text } = req.body;
+    const imageUrl = `/uploads/${req.file.filename}`;
     const { userId } = req.params;
 
-    const post = new Post({ text, image, userId: userId });
+    const post = new Post({ text, image: imageUrl, userId });
+
     await post.save();
+
     res.status(201).json(post);
   } catch (error) {
     res.status(500).json({ error: 'Error creating post' });

@@ -188,21 +188,23 @@
         "description": "Creates a new post.",
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
+            "name": "text",
+            "in": "formData",
             "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "text": { "type": "string" },
-                "image": { "type": "string" }
-              },
-              "required": ["text"]
-            }
+            "type": "string",
+            "description": "The text content of the post"
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "required": true,
+            "type": "file",
+            "description": "The image file to be uploaded"
           }
         ],
         "responses": {
           "201": { "description": "Post created successfully." },
+          "400": { "description": "Invalid input." },
           "500": { "description": "Error creating post." }
         },
         "security": [
