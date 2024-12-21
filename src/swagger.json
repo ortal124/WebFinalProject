@@ -256,6 +256,61 @@
             "BearerAuth": []
           }
         ]
+      },
+      "put": {
+        "summary": "Update an existing post by ID",
+        "description": "Updates a post's text and/or image based on the provided data. Fields will only be updated if new, non-empty values are provided.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the post to be updated",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "text",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "The text content of the post"
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "type": "file",
+            "required": false,
+            "description": "The new image file for the post"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input."
+          },
+          "404": {
+            "description": "Post not found."
+          },
+          "500": {
+            "description": "Error updating post."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     },
     "/posts/{id}/like": {
