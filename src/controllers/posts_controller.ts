@@ -132,9 +132,22 @@ export const getPostsByUserId = async (req: Request, res: Response) => {
 
 export const updatePostById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const { text } = req.body || ""; 
+    const { id, userId } = req.params;
 
+    const post = await Post.findById(id);
+    if (!post) {
+      res.status(404).json({ error: 'Post not found' });
+      return;
+    }
+
+    if (post.userId != userId) {
+      res
+        .status(401)
+        .json({ error: 'User is not authorized to delete post of another user' });
+      return
+    }
+
+    const { text } = req.body || ""; 
     let imageUrl = undefined;
     if (req.file) {
       imageUrl = `/uploads/${req.file.filename}`;  // Construct the image URL
@@ -151,11 +164,6 @@ export const updatePostById = async (req: Request, res: Response): Promise<void>
     }
 
     const updatedPost = await Post.findByIdAndUpdate(id, updateFields, { new: true });
-
-    if (!updatedPost) {
-      res.status(404).json({ message: 'Post not found' });
-      return;
-    }
 
     res.status(200).json(updatedPost);
   } catch (error) {
