@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Document } from 'mongoose';
 import * as dotenv from 'dotenv';
+import { OAuth2Client } from 'google-auth-library';
 
 dotenv.config();
 
@@ -123,7 +124,7 @@ const verifyRefreshToken = (refreshToken: string | undefined) => {
                     return;
                 }
                 if (user.refreshToken !== refreshToken) {
-                    user.refreshToken = '';  // Reset refreshToken
+                    user.refreshToken = ''; 
                     await user.save();
                     reject("fail");
                     return;
@@ -176,9 +177,63 @@ const refresh = async (req: Request, res: Response) => {
     }
 };
 
+const client = new OAuth2Client();
+
+const googleSignin = async (req: Request, res: Response): Promise<void> => {
+    const credential = req.body.credential;
+
+    if (!credential) {
+        res.status(400).json({ error: "Missing credential in request body" });
+        return;
+    }
+
+    try {
+        const ticket = await client.verifyIdToken({
+        idToken: credential,
+        audience: process.env.GOOGLE_CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+        if (!payload || !payload.email) {
+            res.status(400).json({ error: "Invalid token payload or missing email" });
+            return;
+        }
+
+        const email = payload.email;
+        let user = await userModel.findOne({ email });
+
+        if (!user) {
+            res.status(404).json({ error: "User dos not exist" });
+            return;
+        }
+    
+        const tokens = await generateToken(user._id);
+
+        if (!tokens) {
+            res.status(500).send('Server Error');
+            return;
+        }
+
+        user.refreshToken = tokens.refreshToken;
+        await user.save();
+
+        res.status(200).send(
+        {
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+        });
+    } catch (error) {
+      console.error("Error during Google Sign-In:", error);
+      res.status(400).json({ error: "Authentication failed" });
+      return;
+    
+    }
+};
+
 export default {
     register,
     login,
     refresh,
     logout,
+    googleSignin
 };

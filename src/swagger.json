@@ -68,6 +68,41 @@
         }
       }
     },
+    "/auth/google/login": {
+      "post": {
+        "summary": "Google Sign-In",
+        "description": "Authenticates a user using Google credentials and returns a JWT token.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "credential": { "type": "string" }
+              },
+              "required": ["credential"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authentication successful.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "accessToken": { "type": "string" },
+                "refreshToken": { "type": "string" }
+              }
+            }
+          },
+          "400": { "description": "Missing or invalid credentials." },
+          "404": { "description": "User does not exist." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
     "/auth/logout": {
       "post": {
         "summary": "User logout",
