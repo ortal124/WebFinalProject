@@ -179,7 +179,7 @@ const refresh = async (req: Request, res: Response) => {
 
 const client = new OAuth2Client();
 
-export const googleSignin = async (req: Request, res: Response): Promise<void> => {
+const googleSignin = async (req: Request, res: Response): Promise<void> => {
     const credential = req.body.credential;
 
     if (!credential) {
