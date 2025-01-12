@@ -1,10 +1,6 @@
 import { Request, Response } from 'express';
 import userModel  from '../models/user_model';
-import * as dotenv from 'dotenv';
 import { processUserWithImages } from '../utils/download'
-
-
-dotenv.config();
 
 export const getUserProfile = async (req: Request, res: Response) => {
     try {

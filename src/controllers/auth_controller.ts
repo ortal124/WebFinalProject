@@ -4,10 +4,7 @@ import {IUser} from '../interfaces/IUser';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Document } from 'mongoose';
-import * as dotenv from 'dotenv';
 import { OAuth2Client } from 'google-auth-library';
-
-dotenv.config();
 
 const register = async (req: Request, res: Response) => {
     try {
