@@ -10,7 +10,8 @@ export const getUserProfile = async (req: Request, res: Response) => {
             return;
         }
 
-        const downloadedUser = await processUserWithImages(user);
+        const userDoc = user.toObject();
+        const downloadedUser = await processUserWithImages(userDoc);
 
         res.json(downloadedUser);
     } catch (error) {

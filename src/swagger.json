@@ -190,7 +190,12 @@
           "201": { "description": "username updated successfully." },
           "404": { "description": "username doesnt exist." },
           "500": { "description": "Error updating username." }
-        }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     },
     "/users/{userId}/photo": {
