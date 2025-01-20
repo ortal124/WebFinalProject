@@ -111,12 +111,7 @@
           "200": { "description": "Logout successful." },
           "401": { "description": "Unauthorized." },
           "500": { "description": "Error logging out." }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/auth/refresh": {

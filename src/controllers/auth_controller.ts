@@ -136,15 +136,10 @@ const verifyRefreshToken = (refreshToken: string | undefined) => {
 
 const logout = async (req: Request, res: Response) => {
     try {
-        const { userId } = req.params;
-        const user = await userService.getUser(userId);
-        if (user) {
-            user.refreshToken = ''; // Clear refresh token upon logout
-            await user.save();
-            res.status(200).send("Success");
-        } else {
-            res.status(404).send("User not found");
-        }
+        const user = await verifyRefreshToken(req.body.refreshToken);
+        user.refreshToken = ''; // Clear refresh token upon logout
+        await user.save();
+        res.status(200).send("Success");
     } catch (err) {
         res.status(400).send("Fail");
     }
