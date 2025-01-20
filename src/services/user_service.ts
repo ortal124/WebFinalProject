@@ -27,6 +27,14 @@ class UserService {
           throw new Error('Failed to search for the document');
       }
   };
+
+  async updateUserFields(userId: string, updateData: Partial<IUser>) {
+    return UserModel.findByIdAndUpdate(userId, updateData, { new: true });
+  }
+  
+  async deleteUser(userId: string) {
+    return UserModel.findByIdAndDelete(userId);
+  }
 }
 
 export default new UserService();

@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import userModel  from '../models/user_model';
 import { processUserWithImages } from '../utils/download'
+import userService from '../services/user_service';
 
 export const getUserProfile = async (req: Request, res: Response) => {
     try {
-        const user = await userModel.findById(req.params.id);
+        const user = await userService.getUser(req.params.id);
         if (!user) {
             res.status(404).json({ error: 'User not found' });
             return;
@@ -21,16 +21,16 @@ export const getUserProfile = async (req: Request, res: Response) => {
 export const updateUserName = async (req: Request, res: Response) => {
     try {
         const { username, userId} = req.body;
-        const user = await userModel.findById(userId);
+        const user = await userService.getUser(userId);
         if (!user) {
             res.status(404).json({ error: 'User not found' });
             return;
         }
-        const result = await userModel.updateOne(
-            { _id: userId },
-            { $set: { username } } 
-          );        
-        res.status(201).json(result);
+        const updatedUser = await userService.updateUserFields(
+          userId,
+          { username }
+        );     
+        res.status(201).json(updatedUser);
     } catch (error) {
         res.status(500).json({ error: 'Error fetching user profile' });
     }
@@ -46,10 +46,9 @@ export const addUserPhoto = async (req: Request, res: Response): Promise<void> =
       const { userId } = req.params;
       const imageUrl = `/uploads/${req.file.filename}`;
 
-    const user = await userModel.findByIdAndUpdate(
+    const user = await userService.updateUserFields(
         userId,
-        { profileImage: imageUrl },
-        { new: true }
+        { profileImage: imageUrl }
       );
   
       if (!user) {
