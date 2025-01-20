@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import userModel  from '../models/user_model';
 import {IUser} from '../interfaces/IUser';
+import userService from '../services/user_service';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Document } from 'mongoose';
@@ -8,14 +8,12 @@ import { OAuth2Client } from 'google-auth-library';
 
 const register = async (req: Request, res: Response) => {
     try {
-        const password = req.body.password;
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-        const user = await userModel.create({
-            email: req.body.email,
-            username: req.body.username,
-            password: hashedPassword,
-        });
+        const { username, password, email} = req.body;
+        if (!username || !password || !email) {
+            res.status(400).json({ message: 'Content and sender are required for update' });
+            return;
+        } 
+        const user = await userService.createUser(req.body);
         res.status(200).send(user);
     } catch (err) {
         res.status(400).send(err);
@@ -54,7 +52,7 @@ const generateToken = (_id: string): tTokens | null => {
 
 const login = async (req: Request, res: Response) => {
     try {
-        const user = await userModel.findOne({ username: req.body.username });
+        const user = await userService.findDUserByField("username", req.body.username);
         if (!user) {
             res.status(400).send('Wrong username or password');
             return;
@@ -69,7 +67,7 @@ const login = async (req: Request, res: Response) => {
             return;
         }
         // generate token
-        const tokens = generateToken(user._id);
+        const tokens = generateToken(user._id!);
         if (!tokens) {
             res.status(500).send('Server Error');
             return;
@@ -115,7 +113,7 @@ const verifyRefreshToken = (refreshToken: string | undefined) => {
             const _id = payload._id;
             try {
                 // Get the user from the DB
-                const user = await userModel.findById(_id);
+                const user = await userService.getUser(_id);
                 if (!user) {
                     reject("fail");
                     return;
@@ -138,10 +136,15 @@ const verifyRefreshToken = (refreshToken: string | undefined) => {
 
 const logout = async (req: Request, res: Response) => {
     try {
-        const user = await verifyRefreshToken(req.body.refreshToken);
-        user.refreshToken = ''; // Clear refresh token upon logout
-        await user.save();
-        res.status(200).send("Success");
+        const { userId } = req.params;
+        const user = await userService.getUser(userId);
+        if (user) {
+            user.refreshToken = ''; // Clear refresh token upon logout
+            await user.save();
+            res.status(200).send("Success");
+        } else {
+            res.status(404).send("User not found");
+        }
     } catch (err) {
         res.status(400).send("Fail");
     }
@@ -154,7 +157,7 @@ const refresh = async (req: Request, res: Response) => {
             res.status(400).send("Fail");
             return;
         }
-        const tokens = generateToken(user._id);
+        const tokens = generateToken(user._id!);
 
         if (!tokens) {
             res.status(500).send('Server Error');
@@ -197,7 +200,7 @@ const googleSignin = async (req: Request, res: Response): Promise<void> => {
         }
 
         const email = payload.email;
-        let user = await userModel.findOne({ email });
+        const user = await userService.findDUserByField("email", email);
 
         if (!user) {
             res.status(404).json({ error: "User dos not exist" });
