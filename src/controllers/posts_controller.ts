@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Post from '../models/post_model';
+import * as postService from '../services/post_service';
 import { processPostsWithImages } from '../utils/download'
 
 export const createPost = async (req: Request, res: Response): Promise<void> => {
@@ -13,9 +13,7 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
     const imageUrl = `/uploads/${req.file.filename}`;
     const { userId } = req.params;
 
-    const post = new Post({ text, image: imageUrl, userId });
-
-    await post.save();
+    const post = await postService.createPost({ text, image: imageUrl, userId, likes: [] });
 
     res.status(201).json(post);
   } catch (error) {
@@ -28,14 +26,11 @@ export const getPosts = async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
 
-    const posts = await Post.find()
-      .skip((page - 1) * limit)  // Skip posts for pagination
-      .limit(limit);  // Limit number of posts per page
-
+    const posts = await postService.getPosts({limit, page});
     
     const downloadedPosts = await processPostsWithImages(posts);
 
-    const totalPosts = await Post.countDocuments();
+    const totalPosts = await postService.countPosts();
 
     res.json({
       downloadedPosts,
@@ -51,7 +46,7 @@ export const getPosts = async (req: Request, res: Response) => {
 export const likePost = async (req: Request, res: Response) => {
   try {
     const { id, userId } = req.params;
-    const post = await Post.findById(id);
+    const post = await postService.getPostById(id);
     if (!post) {
       res.status(404).json({ error: 'Post not found' });
       return;
@@ -69,7 +64,7 @@ export const likePost = async (req: Request, res: Response) => {
 export const unLikePost = async (req: Request, res: Response) => {
   try {
     const { id, userId } = req.params;
-    const post = await Post.findById(id);
+    const post = await postService.getPostById(id);
     if (!post) {
       res.status(404).json({ error: 'Post not found' });
       return;
@@ -88,7 +83,7 @@ export const deletePost = async (req: Request, res: Response) => {
   try {
     const { id, userId } = req.params;
 
-    const post = await Post.findById(id);
+    const post = await postService.getPostById(id);
     if (!post) {
       res.status(404).json({ error: 'Post not found' });
       return
@@ -101,7 +96,7 @@ export const deletePost = async (req: Request, res: Response) => {
       return
     }
 
-    await Post.findByIdAndDelete(id);
+    await postService.deletePost(id);
 
     res.status(200).json({ message: 'Post deleted successfully' });
   } catch (error) {
@@ -114,7 +109,7 @@ export const deletePost = async (req: Request, res: Response) => {
 export const getPostById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const post = await Post.findById(id);
+    const post = await postService.getPostById(id);
     if (!post) {
       res.status(404).json({ error: 'Post not found' });
       return;
@@ -131,7 +126,7 @@ export const getPostById = async (req: Request, res: Response) => {
 export const getPostsByUserId = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const posts = await Post.find({ userId: id });
+    const posts = await postService.getPostsByUser(id);
 
     const downloadedPosts = await processPostsWithImages(posts);
 
@@ -145,7 +140,7 @@ export const updatePostById = async (req: Request, res: Response): Promise<void>
   try {
     const { id, userId } = req.params;
 
-    const post = await Post.findById(id);
+    const post = await postService.getPostById(id);
     if (!post) {
       res.status(404).json({ error: 'Post not found' });
       return;
@@ -174,7 +169,7 @@ export const updatePostById = async (req: Request, res: Response): Promise<void>
       updateFields.image = imageUrl;
     }
 
-    const updatedPost = await Post.findByIdAndUpdate(id, updateFields, { new: true });
+    const updatedPost = await postService.updatePost(id, updateFields);
 
     res.status(200).json(updatedPost);
   } catch (error) {
