@@ -20,19 +20,24 @@ let testUser: User = {
 
 describe('Auth Routes', () => {
   let userId = '';
+  let usersToDelete: string[] = [];
 
   beforeAll(async () => {
     console.log('beforeAll');
     app = await initApp();
     const user = await userService.createUser({ username: testUser.username, password: testUser.password, email: testUser.email });
     userId = user.id;
+    usersToDelete.push(userId);
   });
 
   afterAll(async () => {
-    if (userId) {
-      await userService.deleteUser(userId);
-    }
     console.log('afterAll');
+    if (usersToDelete.length) {
+      for (const id of usersToDelete) {
+          console.log('deleting user:', id);
+          await userService.deleteUser(id);
+      }
+    }
     mongoose.connection.close();
   });
 
@@ -98,6 +103,35 @@ describe('Auth Routes', () => {
         .send({ refreshToken: 'invalidRefreshToken' });
 
       expect(response.status).toBe(400);
+    });
+  });
+
+  
+  describe('POST /auth/register', () => {
+    it('should register a new user successfully', async () => {
+        const response = await request(app)
+            .post('/auth/register')
+            .send({
+                username: 'newUser',
+                email: 'newUser@user.com',
+                password: 'newpassword',
+            });
+
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty('_id');
+        usersToDelete.push(response.body._id);
+    });
+
+    it('should return 400 for invalid request', async () => {
+        const response = await request(app)
+            .post('/auth/register')
+            .send({
+                username: '',
+                email: 'invalidEmail',
+                password: '',
+            });
+
+        expect(response.status).toBe(400);
     });
   });
 });
