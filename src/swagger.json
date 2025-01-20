@@ -15,9 +15,16 @@
   "host": "localhost:3000",
   "basePath": "",
   "schemes": ["http"],
+  "tags": [
+    { "name": "auth", "description": "Endpoints related to authentication." },
+    { "name": "users", "description": "Endpoints related to user management." },
+    { "name": "posts", "description": "Endpoints for managing posts." },
+    { "name": "comments", "description": "Endpoints for managing comments." }
+  ],
   "paths": {
     "/auth/register": {
       "post": {
+        "tags": ["auth"],
         "summary": "Register a new user",
         "description": "Creates a new user account.",
         "parameters": [
@@ -44,6 +51,7 @@
     },
     "/auth/login": {
       "post": {
+        "tags": ["auth"],
         "summary": "User login",
         "description": "Authenticates a user and returns a token.",
         "parameters": [
@@ -70,6 +78,7 @@
     },
     "/auth/google/login": {
       "post": {
+        "tags": ["auth"],
         "summary": "Google Sign-In",
         "description": "Authenticates a user using Google credentials and returns a JWT token.",
         "parameters": [
@@ -105,6 +114,7 @@
     },
     "/auth/logout": {
       "post": {
+        "tags": ["auth"],
         "summary": "User logout",
         "description": "Logs out the authenticated user.",
         "responses": {
@@ -116,6 +126,7 @@
     },
     "/auth/refresh": {
       "post": {
+        "tags": ["auth"],
         "summary": "Refresh authentication token",
         "description": "Refresh the JWT token using the refresh token.",
         "parameters": [
@@ -145,6 +156,7 @@
     },
     "/users/profile/{id}": {
       "get": {
+        "tags": ["users"],
         "summary": "Get user profile",
         "description": "Fetches profile details of a user by ID.",
         "parameters": [
@@ -164,6 +176,7 @@
     },
     "/users/username": {
       "put": {
+        "tags": ["users"],
         "summary": "update user username",
         "description": "update username of a user by ID.",
         "parameters": [
@@ -195,6 +208,7 @@
     },
     "/users/{userId}/photo": {
       "put": {
+        "tags": ["users"],
         "summary": "Upload a photo for the user",
         "description": "This endpoint allows a user to upload a profile photo.",
         "parameters": [
@@ -245,6 +259,7 @@
     },
     "/posts": {
       "get": {
+        "tags": ["posts"],
         "summary": "Get all posts",
         "description": "Fetches a list of all posts with pagination.",
         "parameters": [
@@ -269,6 +284,7 @@
         }
       },
       "post": {
+        "tags": ["posts"],
         "summary": "Create a post",
         "description": "Creates a new post.",
         "parameters": [
@@ -301,6 +317,7 @@
     },
     "/posts/{id}": {
       "get": {
+        "tags": ["posts"],
         "summary": "Get a post by ID",
         "description": "Fetches a specific post by its ID.",
         "parameters": [
@@ -319,6 +336,7 @@
         }
       },
       "delete": {
+        "tags": ["posts"],
         "summary": "Delete a post",
         "description": "Deletes a post by ID.",
         "parameters": [
@@ -343,6 +361,7 @@
         ]
       },
       "put": {
+        "tags": ["posts"],
         "summary": "Update an existing post by ID",
         "description": "Updates a post's text and/or image based on the provided data. Fields will only be updated if new, non-empty values are provided.",
         "parameters": [
@@ -400,6 +419,7 @@
     },
     "/posts/{id}/like": {
       "post": {
+        "tags": ["posts"],
         "summary": "Like a post",
         "description": "Adds a like to a post.",
         "parameters": [
@@ -422,6 +442,7 @@
         ]
       },
       "delete": {
+        "tags": ["posts"],
         "summary": "Unlike a post",
         "description": "Removes a like from a post.",
         "parameters": [
@@ -446,6 +467,7 @@
     },
     "/posts/generate": {
       "post": {
+        "tags": ["posts"],
         "summary": "Generate a post",
         "description": "Generates a new post with default content.",
         "responses": {
@@ -461,6 +483,7 @@
     },
     "/posts/user/{id}": {
       "get": {
+        "tags": ["posts"],
         "summary": "Get posts by userId",
         "description": "Get posts by userId",
         "parameters": [
@@ -484,6 +507,7 @@
     },
     "/comments": {
       "post": {
+        "tags": ["comments"],
         "summary": "Add a comment",
         "description": "Adds a comment to a post.",
         "parameters": [
@@ -514,6 +538,7 @@
     },
     "/comments/{id}": {
       "delete": {
+        "tags": ["comments"],
         "summary": "Delete a comment",
         "description": "Deletes a comment by ID.",
         "parameters": [
@@ -539,6 +564,7 @@
     },
     "/comments/{postId}": {
       "get": {
+        "tags": ["comments"],
         "summary": "Get comments for a post",
         "description": "Fetches comments for a specific post by ID.",
         "parameters": [
