@@ -6,6 +6,11 @@ export const addComment = async (req: Request, res: Response) => {
   try {
     const { post, text } = req.body;
     const { userId } = req.params;
+
+    if(!post || !text) {
+      res.status(400).json({ error: 'Post and text are required' });
+      return;
+    }
     
     const postDoc = await postService.getPostById(post);
     if (!postDoc) {
