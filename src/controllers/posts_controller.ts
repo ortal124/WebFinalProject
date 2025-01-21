@@ -10,6 +10,11 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
     }
 
     const { text } = req.body;
+
+    if (!text) {
+      res.status(400).json({ message: 'No text provided' });
+      return;
+    }
     const imageUrl = `/uploads/${req.file.filename}`;
     const { userId } = req.params;
 
@@ -115,7 +120,8 @@ export const getPostById = async (req: Request, res: Response) => {
       return;
     }
 
-    const downloadedPost = await processPostsWithImages([post]);
+    const poatDoc = post.toObject();
+    const downloadedPost = (await processPostsWithImages([poatDoc]))[0];
 
     res.status(200).json(downloadedPost);
   } catch (error) {
@@ -151,6 +157,11 @@ export const updatePostById = async (req: Request, res: Response): Promise<void>
         .status(401)
         .json({ error: 'User is not authorized to delete post of another user' });
       return
+    }
+
+    if(!req.file && !req.body.text) {
+      res.status(400).json({ error: 'No update fields provided' });
+      return 
     }
 
     const { text } = req.body || ""; 

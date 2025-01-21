@@ -51,8 +51,9 @@ describe('User Routes', () => {
         });
 
         it('should return 404 for non-existing user', async () => {
+            const nonExistentUserId = new mongoose.Types.ObjectId().toString();
             const response = await request(app)
-                .get('/users/profile/677ebdb813b7eb6e9a076ec3')
+                .get(`/users/profile/${nonExistentUserId}`)
 
             expect(response.status).toBe(404);
         });

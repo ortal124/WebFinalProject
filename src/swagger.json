@@ -378,7 +378,7 @@
           {
             "name": "text",
             "in": "formData",
-            "required": true,
+            "required": false,
             "type": "string",
             "description": "The text content of the post"
           },

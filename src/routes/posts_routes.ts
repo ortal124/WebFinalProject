@@ -6,9 +6,9 @@ import multer from 'multer';
 
 const router = express.Router();
 
-router.get('/', postController.getPosts);
-
 router.get('/:id', postController.getPostById);
+
+router.get('/', postController.getPosts);
 
 router.get('/user/:id', postController.getPostsByUserId);
 

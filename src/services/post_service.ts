@@ -12,7 +12,7 @@ interface PaginationParams {
 }
 
 export const getPosts = async ({ limit, page }: PaginationParams) => {
-    return await Post.find()
+    return await Post.find().lean()
       .skip((page - 1) * limit)  // Skip posts for pagination
       .limit(limit);  // Limit number of posts per page
 };
@@ -22,7 +22,7 @@ export const countPosts = async () =>{
 };
 
 export const getPostsByUser = async (userId: string) => {
-    return await Post.find({ userId });
+    return await Post.find({ userId }).lean();
 };
 
 export const getPostById = async (postId: string) => {
