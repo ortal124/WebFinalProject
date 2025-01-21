@@ -4,5 +4,5 @@ export interface IUser {
     email: string;
     profileImage?: string;
     refreshToken?: String;
-    _id: string;
+    _id?: string;
   }

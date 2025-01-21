@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema<IUser>({
   password: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   profileImage: { type: String },
-  refreshToken: { type: String, required: false, unique: true }
+  refreshToken: { type: String, required: false, unique: true, sparse: true }
 });
 
 const User = mongoose.model<IUser>('Users', userSchema);

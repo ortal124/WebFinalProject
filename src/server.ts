@@ -1,11 +1,12 @@
-import dotenv from "dotenv"
-dotenv.config();
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import express, { Express } from "express";
 import { appRoutes } from './routes';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './swagger.json';
+import dotenv from "dotenv"
+
+dotenv.config();
 
 const app = express();
 app.use(bodyParser.json());

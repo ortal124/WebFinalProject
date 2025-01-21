@@ -1,9 +1,12 @@
 {
   "name": "webfinalproject",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsc && node ./dist/app.js",
+    "dev": "ts-node src/app.ts",
+    "test": "jest",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
@@ -12,11 +15,16 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/mongoose": "^5.11.96",
     "@types/multer": "^1.4.12",
     "@types/node": "^22.10.2",
+    "@types/supertest": "^6.0.2",
     "@types/swagger-ui-express": "^4.1.7",
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.7.2"
