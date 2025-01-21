@@ -21,7 +21,14 @@ export const getUserProfile = async (req: Request, res: Response) => {
 
 export const updateUserName = async (req: Request, res: Response) => {
     try {
-        const { username, userId} = req.body;
+        const { username} = req.body;
+        const { userId } = req.params;
+
+        if (!username) {
+            res.status(400).json({ error: 'Username is required' });
+            return;
+        }
+        
         const user = await userService.getUser(userId);
         if (!user) {
             res.status(404).json({ error: 'User not found' });

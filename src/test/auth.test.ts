@@ -15,7 +15,7 @@ type User = IUser & {
 let testUser: User = {
   email: 'testAuth@user.com',
   password: 'testpassword',
-  username: 'testuser',
+  username: 'testuserauth',
 };
 
 describe('Auth Routes', () => {

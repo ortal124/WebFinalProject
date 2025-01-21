@@ -187,15 +187,16 @@
             "schema": {
               "type": "object",
               "properties": {
-                "username": { "type": "string" },
-                "userId": { "type": "string" }
+                "username": { "type": "string" }
               },
-              "required": ["username", "userId"]
+              "required": ["username"]
             }
           }
         ],
         "responses": {
           "201": { "description": "username updated successfully." },
+          "400": { "description": "username required." },
+          "401": { "description": "Unauthorized." },
           "404": { "description": "username doesnt exist." },
           "500": { "description": "Error updating username." }
         },
