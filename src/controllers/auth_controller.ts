@@ -78,6 +78,7 @@ const login = async (req: Request, res: Response) => {
 
         res.status(200).send(
             {
+                userId: user._id,
                 accessToken: tokens.accessToken,
                 refreshToken: tokens.refreshToken,
             });
@@ -214,6 +215,7 @@ const googleSignin = async (req: Request, res: Response): Promise<void> => {
 
         res.status(200).send(
         {
+            userId: user._id,
             accessToken: tokens.accessToken,
             refreshToken: tokens.refreshToken,
         });
