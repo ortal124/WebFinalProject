@@ -8,7 +8,7 @@ import cors from 'cors';
 
 import dotenv from "dotenv"
 
-dotenv.config();
+dotenv.config({ path: `./config/.env.${process.env.NODE_ENV || 'local'}` });
 
 const app = express();
 app.use(cors());

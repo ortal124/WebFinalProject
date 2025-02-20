@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "copy .env_prod .env && tsc && node ./dist/app.js",
-    "dev": "copy .env_dev .env && nodemon ./src/app.ts",
-    "test": "copy .env_test .env && jest --detectOpenHandles --forceExit --runInBand"
+    "start": "cross-env NODE_ENV=prod tsc node ./dist/app.js",
+    "dev": "cross-env NODE_ENV=dev nodemon ./src/app.ts",
+    "test": "cross-env NODE_ENV=test jest --detectOpenHandles --forceExit --runInBand"
   },
   "keywords": [],
   "author": "",
@@ -33,6 +33,7 @@
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "google-auth-library": "^9.15.0",
