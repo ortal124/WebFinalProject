@@ -10,9 +10,13 @@ const register = async (req: Request, res: Response) => {
     try {
         const { username, password, email} = req.body;
         if (!username || !password || !email) {
-            res.status(400).json({ message: 'Content and sender are required for update' });
+            res.status(400).json({ message: 'Missing mandatory fields' });
             return;
         } 
+        if (req.file) {
+            const imageUrl = `/uploads/${req.file.filename}`;
+            req.body.profileImage = imageUrl;
+        }
         const user = await userService.createUser(req.body);
         res.status(200).send(user);
     } catch (err) {
