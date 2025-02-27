@@ -231,10 +231,57 @@ const googleSignin = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
+const googleSignUp = async (req: Request, res: Response): Promise<void> => {
+    const credential = req.body.credential;
+
+    if (!credential) {
+        res.status(400).json({ error: "Missing credential in request body" });
+        return;
+    }
+
+    try {
+        const ticket = await client.verifyIdToken({
+        idToken: credential,
+        audience: process.env.GOOGLE_CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+        if (!payload || !payload.email) {
+            res.status(400).json({ error: "Invalid token payload or missing email" });
+            return;
+        }
+
+        const email = payload.email;
+        let user = await userService.findDUserByField("email", email);
+
+        if (user) {
+            res.status(400).json({ error: "User already exists" });
+            return;
+        }
+
+        const userData:IUser= {
+            email:email,
+            password:"google-login",
+            username: email.split('@')[0],
+            profileImage : payload.picture
+        };
+
+        user = await userService.createUser(userData);
+
+        res.status(200).send(user);
+    } catch (error) {
+      console.error("Error during Google Sign-Up:", error);
+      res.status(500).json({ error: "Register failed" });
+      return;
+    
+    }
+};
+
 export default {
     register,
     login,
     refresh,
     logout,
-    googleSignin
+    googleSignin,
+    googleSignUp
 };

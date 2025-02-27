@@ -10,6 +10,8 @@ router.post("/login", authController.login);
 
 router.post("/google/login", authController.googleSignin);
 
+router.post("/google/register", authController.googleSignUp);
+
 router.post("/refresh", authController.refresh);
 
 router.post("/logout", authController.logout);
