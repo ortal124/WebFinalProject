@@ -26,8 +26,14 @@ export async function generateContent(imagePath: string, mimeType: string) {
         path.join(__dirname, '../../uploads', path.basename(imagePath)),
         mimeType
     );
-    const result = await model.generateContent([prompt, imagePart]);
-    return JSON.parse(result.response.text());
+    let result = (await model.generateContent([prompt, imagePart])).response.text();
+
+    // Remove the JSON code block if it exists
+    if(result.match(/```json\n([\s\S]*?)\n```/)){
+      result = result.replace(/```json\n?|\n?```/g, "").trim();
+    }
+
+    return JSON.parse(result);
   } catch (error) {
     console.error("Error generating content:", error);
   }
