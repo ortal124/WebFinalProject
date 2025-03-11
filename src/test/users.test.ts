@@ -63,7 +63,7 @@ describe('User Routes', () => {
         it('should upload user photo successfully', async () => {
             const response = await request(app)
                 .put(`/users/${userId}/photo`)
-                .set('Authorization', `${testUser.accessToken}`)
+                .set('Authorization', `Bearer ${testUser.accessToken}`)
                 .attach('photo', './src/test/tests_pic.jpg');
 
             expect(response.status).toBe(200);
@@ -73,7 +73,7 @@ describe('User Routes', () => {
         it('should return 400 for no photo uploaded', async () => {
             const response = await request(app)
                 .put(`/users/${userId}/photo`)
-                .set('Authorization', `${testUser.accessToken}`)
+                .set('Authorization', `Bearer ${testUser.accessToken}`)
 
             expect(response.status).toBe(400);
         });
@@ -92,7 +92,7 @@ describe('User Routes', () => {
             const newUsername = 'updatedUser';
             const response = await request(app)
                 .put('/users/userName')
-                .set('Authorization', `${testUser.accessToken}`)
+                .set('Authorization', `Bearer ${testUser.accessToken}`)
                 .send({ username: newUsername });
 
             expect(response.status).toBe(201);
@@ -102,7 +102,7 @@ describe('User Routes', () => {
         it('should return 400 for invalid username update', async () => {
             const response = await request(app)
                 .put('/users/userName')
-                .set('Authorization', `${testUser.accessToken}`)
+                .set('Authorization', `Bearer ${testUser.accessToken}`)
                 .send({ username: '' });
 
             expect(response.status).toBe(400);

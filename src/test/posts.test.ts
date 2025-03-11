@@ -53,7 +53,7 @@ describe('Post Routes', () => {
         it('should create a new post', async () => {
             const response = await request(app)
                 .post('/posts')
-                .set('Authorization', `${testUser.accessToken}`)
+                .set('Authorization', `Bearer ${testUser.accessToken}`)
                 .field('text', testPostText)
                 .attach('image','./src/test/tests_pic.jpg');
 
@@ -65,7 +65,7 @@ describe('Post Routes', () => {
         it('should return 400 for invalid request - no image', async () => {
             const response = await request(app)
                 .post('/posts')
-                .set('Authorization', `${testUser.accessToken}`)
+                .set('Authorization', `Bearer ${testUser.accessToken}`)
                 .field('text', testPostText)
 
             expect(response.status).toBe(400);
@@ -74,7 +74,7 @@ describe('Post Routes', () => {
         it('should return 400 for invalid request - no text', async () => {
             const response = await request(app)
                 .post('/posts')
-                .set('Authorization', `${testUser.accessToken}`)
+                .set('Authorization', `Bearer ${testUser.accessToken}`)
                 .attach('image','./src/test/tests_pic.jpg');
 
             expect(response.status).toBe(400);
@@ -95,7 +95,7 @@ describe('Post Routes', () => {
         it('should get a post by ID', async () => {
             const response = await request(app)
                 .get(`/posts/${postId}`)
-                .set('Authorization', `${testUser.accessToken}`);
+                .set('Authorization', `Bearer ${testUser.accessToken}`);
 
             expect(response.status).toBe(200);
             expect(response.body).toHaveProperty('_id', postId);
@@ -105,7 +105,7 @@ describe('Post Routes', () => {
             const nonExistentPostId = new mongoose.Types.ObjectId().toString();
             const response = await request(app)
                 .get(`/posts/${nonExistentPostId}`)
-                .set('Authorization', `${testUser.accessToken}`);
+                .set('Authorization', `Bearer ${testUser.accessToken}`);
 
         
             expect(response.status).toBe(404);
@@ -116,7 +116,7 @@ describe('Post Routes', () => {
         it('should update a post text by ID', async () => {
             const response = await request(app)
                 .put(`/posts/${postId}`)
-                .set('Authorization', `${testUser.accessToken}`)
+                .set('Authorization', `Bearer ${testUser.accessToken}`)
                 .field('text', 'Updated post content');
 
             expect(response.status).toBe(200);
@@ -126,7 +126,7 @@ describe('Post Routes', () => {
         it('should update a post image by ID', async () => {
             const response = await request(app)
                 .put(`/posts/${postId}`)
-                .set('Authorization', `${testUser.accessToken}`)
+                .set('Authorization', `Bearer ${testUser.accessToken}`)
                 .attach('image','./src/test/tests_pic2.jpg');
 
             expect(response.status).toBe(200);
@@ -136,7 +136,7 @@ describe('Post Routes', () => {
         it('should update a post by ID', async () => {
             const response = await request(app)
                 .put(`/posts/${postId}`)
-                .set('Authorization', `${testUser.accessToken}`)
+                .set('Authorization', `Bearer ${testUser.accessToken}`)
                 .field('text', 'Updated post content22')
                 .attach('image','./src/test/tests_pic.jpg');
 
@@ -147,7 +147,7 @@ describe('Post Routes', () => {
         it('should return 400 for invalid request', async () => {
             const response = await request(app)
                 .put(`/posts/${postId}`)
-                .set('Authorization', `${testUser.accessToken}`)
+                .set('Authorization', `Bearer ${testUser.accessToken}`)
                 .send({});
 
             expect(response.status).toBe(400);
@@ -157,7 +157,7 @@ describe('Post Routes', () => {
             const nonExistentPostId = new mongoose.Types.ObjectId().toString();
             const response = await request(app)
                 .put(`/posts/${nonExistentPostId}`)
-                .set('Authorization', `${testUser.accessToken}`)
+                .set('Authorization', `Bearer ${testUser.accessToken}`)
                 .send({ text: 'Updated post content' });
 
             expect(response.status).toBe(404);
@@ -177,7 +177,7 @@ describe('Post Routes', () => {
         it('should like a post', async () => {
             const response = await request(app)
                 .post(`/posts/${postId}/like`)
-                .set('Authorization', `${testUser.accessToken}`);
+                .set('Authorization', `Bearer ${testUser.accessToken}`);
     
             expect(response.status).toBe(200);
             expect(response.body).toHaveProperty('likes');
@@ -189,7 +189,7 @@ describe('Post Routes', () => {
             const nonExistentPostId = new mongoose.Types.ObjectId().toString();
             const response = await request(app)
                 .post(`/posts/${nonExistentPostId}/like`)
-                .set('Authorization', `${testUser.accessToken}`);
+                .set('Authorization', `Bearer ${testUser.accessToken}`);
     
             expect(response.status).toBe(404);
         });
@@ -207,7 +207,7 @@ describe('Post Routes', () => {
         it('should unlike a post', async () => {
             const response = await request(app)
                 .delete(`/posts/${postId}/like`)
-                .set('Authorization', `${testUser.accessToken}`);
+                .set('Authorization', `Bearer ${testUser.accessToken}`);
     
             expect(response.status).toBe(200);
             expect(response.body).toHaveProperty('likes');
@@ -219,7 +219,7 @@ describe('Post Routes', () => {
             const nonExistentPostId = new mongoose.Types.ObjectId().toString();
             const response = await request(app)
                 .delete(`/posts/${nonExistentPostId}/like`)
-                .set('Authorization', `${testUser.accessToken}`);
+                .set('Authorization', `Bearer ${testUser.accessToken}`);
     
             expect(response.status).toBe(404);
         });
@@ -249,7 +249,7 @@ describe('Post Routes', () => {
         it('should delete a post by ID', async () => {
             const response = await request(app)
                 .delete(`/posts/${postId}`)
-                .set('Authorization', `${testUser.accessToken}`);
+                .set('Authorization', `Bearer ${testUser.accessToken}`);
     
             expect(response.status).toBe(200);
         });
@@ -258,7 +258,7 @@ describe('Post Routes', () => {
             const nonExistentPostId = new mongoose.Types.ObjectId().toString();
             const response = await request(app)
                 .delete(`/posts/${nonExistentPostId}`)
-                .set('Authorization', `${testUser.accessToken}`);
+                .set('Authorization', `Bearer ${testUser.accessToken}`);
     
             expect(response.status).toBe(404);
         });
