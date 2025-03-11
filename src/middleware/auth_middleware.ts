@@ -6,7 +6,7 @@ type Payload = {
 };
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const token = req.header('Authorization');
+    const token = req.header('Authorization')?.split(" ")[1]; // חותך את "Bearer "
 
     if (!token) {
         res.status(401).send('Access Denied');
@@ -18,6 +18,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     }
     jwt.verify(token, process.env.TOKEN_SECRET, (err, payload) => {
         if (err) {
+            console.log("token + " + req.header('Authorization'))
             res.status(401).send('Access Denied');
             return;
         }

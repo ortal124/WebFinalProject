@@ -74,7 +74,7 @@ describe('Comment Routes', () => {
         it('should create a new comment', async () => {
             const response = await request(app)
                 .post('/comments')
-                .set('Authorization', `${testUser.accessToken}`)
+                .set('Authorization', `Bearer ${testUser.accessToken}`)
                 .send({text: testComment.text, post: testComment.postId});
 
             expect(response.status).toBe(201);
@@ -85,7 +85,7 @@ describe('Comment Routes', () => {
         it('should return 400 for invalid request', async () => {
             const response = await request(app)
                 .post('/comments')
-                .set('Authorization', `${testUser.accessToken}`)
+                .set('Authorization', `Bearer ${testUser.accessToken}`)
                 .send({});
 
             expect(response.status).toBe(400);
@@ -95,7 +95,7 @@ describe('Comment Routes', () => {
             const nonExistentPostId = new mongoose.Types.ObjectId().toString();
             const response = await request(app)
                 .post('/comments')
-                .set('Authorization', `${testUser.accessToken}`)
+                .set('Authorization', `Bearer ${testUser.accessToken}`)
                 .send({text: testComment.text, post: nonExistentPostId});
 
             expect(response.status).toBe(404);
@@ -115,7 +115,7 @@ describe('Comment Routes', () => {
         it('should get comments by post ID', async () => {
             const response = await request(app)
                 .get(`/comments/${testComment.postId}`)
-                .set('Authorization', `${testUser.accessToken}`);
+                .set('Authorization', `Bearer ${testUser.accessToken}`);
 
             expect(response.status).toBe(200);
             expect(response.body).toBeInstanceOf(Array);
@@ -126,7 +126,7 @@ describe('Comment Routes', () => {
         it('should delete a comment by ID', async () => {
             const response = await request(app)
                 .delete(`/comments/${commentId}`)
-                .set('Authorization', `${testUser.accessToken}`);
+                .set('Authorization', `Bearer ${testUser.accessToken}`);
 
             expect(response.status).toBe(200);
         });
@@ -135,7 +135,7 @@ describe('Comment Routes', () => {
             const nonExistentCommentId = new mongoose.Types.ObjectId().toString();
             const response = await request(app)
                 .delete(`/comments/${nonExistentCommentId}`)
-                .set('Authorization', `${testUser.accessToken}`);
+                .set('Authorization', `Bearer ${testUser.accessToken}`);
 
             expect(response.status).toBe(404);
         });

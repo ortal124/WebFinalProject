@@ -16,7 +16,7 @@ router.post('/', authMiddleware, upload.single('image'), postController.createPo
 
 router.put('/:id',authMiddleware, upload.single('image'), postController.updatePostById);
 
-router.post('/generate', authMiddleware, postController.generatePost);
+router.post('/generate', authMiddleware,upload.single('image'), postController.generatePost);
 
 router.post('/:id/like', authMiddleware, postController.likePost);
 
