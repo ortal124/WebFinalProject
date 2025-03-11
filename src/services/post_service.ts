@@ -13,6 +13,7 @@ interface PaginationParams {
 
 export const getPosts = async ({ limit, page }: PaginationParams) => {
     return await Post.find().lean()
+      .sort({ _id: -1 })  // ממיין את הפוסטים לפי ה-ID בסדר יורד
       .skip((page - 1) * limit)  // Skip posts for pagination
       .limit(limit);  // Limit number of posts per page
 };
