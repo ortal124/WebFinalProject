@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import * as postService from '../services/post_service';
 import { processPostsWithImages } from '../utils/download'
+import { generateContent } from "../utils/gemini"; 
 
 export const createPost = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -188,8 +189,22 @@ export const updatePostById = async (req: Request, res: Response): Promise<void>
   }
 };
 
-export const generatePost = async (req: Request, res: Response) => {
-  // TODO
+export const generatePost = async (req: Request, res: Response): Promise<void> =>{
+  try {
+    if (!req.file) {
+      res.status(400).json({ message: 'No image uploaded' });
+      return;
+    }
+    const imageUrl = `/uploads/${req.file.filename}`;
+
+    const text = await generateContent(imageUrl, req.file.mimetype);
+    res.status(200).json({ text });
+    return;
+  } catch (error) {
+    console.error("Error generating image:", error);
+    res.status(500).json({ message: "Internal server error" });
+    return;
+  }
 };
 
 export default {
