@@ -15,6 +15,11 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+app.use("/public", express.static("public"));
+app.use("/storage", express.static("storage"));
+app.use(express.static("front"));
+
 appRoutes(app);
 
 const db = mongoose.connection;
