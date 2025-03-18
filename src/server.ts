@@ -7,6 +7,7 @@ import swaggerDocument from './swagger.json';
 import cors from 'cors';
 
 import dotenv from "dotenv"
+import path from "path";
 
 dotenv.config({ path: `./config/.env.${process.env.NODE_ENV || 'local'}` });
 
@@ -18,9 +19,13 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/public", express.static("public"));
 app.use("/storage", express.static("storage"));
-app.use(express.static("front"));
+app.use(express.static(path.join(__dirname, "../front")));
 
 appRoutes(app);
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../front", "index.html"));
+});
 
 const db = mongoose.connection;
 db.on("error", (error) => console.error(error));
