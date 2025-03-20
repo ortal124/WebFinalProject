@@ -2,7 +2,6 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import fs from "fs";
 import path from "path";
 
-// Make sure to set your API_KEY in the environment variables
 const genAI = new GoogleGenerativeAI("AIzaSyCy-k3nWQf_tDFHjLwN9BiSERmg4PkiSjA");
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 

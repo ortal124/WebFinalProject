@@ -7,7 +7,7 @@ const commentSchema = new mongoose.Schema<IComment>(
     userId: { type: String, required: true },
     text: { type: String, required: true },
   },
-  { timestamps: true } // Adds createdAt and updatedAt automatically
+  { timestamps: true }
 );
 
 const Comment = mongoose.model<IComment>('Comment', commentSchema);
