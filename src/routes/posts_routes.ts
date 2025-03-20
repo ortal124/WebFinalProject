@@ -66,7 +66,7 @@ router.get('/', postController.getPosts);
 
 /**
  * @swagger
- * /user/{id}:
+ * posts/user/{id}:
  *   get:
  *     tags:
  *       - posts
@@ -98,17 +98,20 @@ router.get('/user/:id', postController.getPostsByUserId);
  *       - bearerAuth: []
  *     summary: Create a post
  *     description: Creates a new post.
- *     parameters:
- *       - name: text
- *         in: formData
- *         required: true
- *         type: string
- *         description: The text content of the post
- *       - name: image
- *         in: formData
- *         required: true
- *         type: file
- *         description: The image file to be uploaded
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *                 description: The photo to upload.
+ *               text:
+ *                 type: string
+ *                 description: The text content of the post.
  *     responses:
  *       201:
  *         description: Post created successfully.
@@ -134,18 +137,20 @@ router.post('/', authMiddleware, upload.single('image'), postController.createPo
  *         in: path
  *         required: true
  *         description: The ID of the post to be updated
- *         schema:
- *           type: string
- *       - name: text
- *         in: formData
- *         required: false
- *         type: string
- *         description: The text content of the post
- *       - name: image
- *         in: formData
- *         type: file
- *         required: false
- *         description: The new image file for the post
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *                 description: The photo to upload.
+ *               text:
+ *                 type: string
+ *                 description: The text content of the post.
  *     responses:
  *       200:
  *         description: Post updated successfully.
@@ -166,7 +171,18 @@ router.put('/:id',authMiddleware, upload.single('image'), postController.updateP
  *       - posts
  *     security:
  *       - bearerAuth: []
- *     summary: Generate a random post
+ *     summary: Generate a random 
+  *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *                 description: The photo to upload.
  *     description: Generates a random post with random text and image from a predefined list.
  *     responses:
  *       200:
