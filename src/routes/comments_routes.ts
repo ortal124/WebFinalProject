@@ -21,22 +21,22 @@ const router = express.Router();
  *       - bearerAuth: []
  *     summary: Add a comment
  *     description: Adds a new comment to a post.
- *     parameters:
- *       - name: body
- *         in: body
- *         required: true
- *         schema:
- *           type: object
- *           required:
- *             - postId
- *             - text
- *           properties:
- *             postId:
- *               type: string
- *               description: The ID of the post to comment on.
- *             text:
- *               type: string
- *               description: The content of the comment.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - post
+ *              - text
+ *            properties:
+ *              post:
+ *                  type: string
+ *                  description: "The post ID."
+ *              text:
+ *                  type: string
+ *                  description: "The comment text."
  *     responses:
  *       201:
  *         description: Comment added successfully.
