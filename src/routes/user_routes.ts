@@ -40,7 +40,9 @@ router.get('/profile/:id', authController.getUserProfile);
  * /{id}/photo:
  *   put:
  *     tags:
- *       - auth
+ *       - users
+*     security:
+ *       - bearerAuth: []
  *     summary: Add user profile photo
  *     description: Uploads a profile photo for the user.
  *     parameters:
@@ -74,6 +76,8 @@ router.put('/:id/photo', authMiddleware, upload.single('photo'), authController.
  *   put:
  *     tags:
  *       - users
+*     security:
+ *       - bearerAuth: []
  *     summary: Update user username
  *     description: Update username of a user by ID.
  *     parameters:

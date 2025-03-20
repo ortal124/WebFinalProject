@@ -51,23 +51,22 @@ router.post("/register",upload.single("profileImage"), authController.register);
  *       - auth
  *     summary: "User login"
  *     description: "Authenticates a user and returns a token."
- *     parameters:
- *       - in: body
- *         name: body
- *         description: "User login credentials"
- *         required: true
- *         schema:
- *           type: object
- *           required:
- *             - username
- *             - password
- *           properties:
- *             username:
- *               type: string
- *               description: "The user's username."
- *             password:
- *               type: string
- *               description: "The user's password."
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - username
+ *              - password
+ *            properties:
+ *              username:
+ *                  type: string
+ *                  description: "The user's username."
+ *              password:
+ *                  type: string
+ *                  description: "The user's password."
  *     responses:
  *       200:
  *         description: "Login successful."
@@ -78,46 +77,6 @@ router.post("/register",upload.single("profileImage"), authController.register);
  */
 router.post("/login", authController.login);
 
-/**
- * @swagger
- * /auth/google/login:
- *   post:
- *     tags:
- *       - auth
- *     summary: "Google Sign-In"
- *     description: "Authenticates a user using Google credentials and returns a JWT token."
- *     parameters:
- *       - in: body
- *         name: body
- *         description: "Google authentication credentials"
- *         required: true
- *         schema:
- *           type: object
- *           required:
- *             - credential
- *           properties:
- *             credential:
- *               type: string
- *               description: "The Google authentication credential."
- *     responses:
- *       200:
- *         description: "Authentication successful."
- *         schema:
- *           type: object
- *           properties:
- *             accessToken:
- *               type: string
- *               description: "JWT access token."
- *             refreshToken:
- *               type: string
- *               description: "JWT refresh token."
- *       400:
- *         description: "Missing or invalid credentials."
- *       404:
- *         description: "User does not exist."
- *       500:
- *         description: "Internal server error."
- */
 router.post("/google/login", authController.googleSignin);
 
 router.post("/google/register", authController.googleSignUp);
@@ -130,19 +89,18 @@ router.post("/google/register", authController.googleSignUp);
  *       - auth
  *     summary: Refresh token
  *     description: Generates a new access token using the refresh token.
- *     parameters:
- *       - in: body
- *         name: body
- *         description: Refresh token credentials
- *         required: true
- *         schema:
- *           type: object
- *           required:
- *             - refreshToken
- *           properties:
- *             refreshToken:
- *               type: string
- *               description: The refresh token used to generate a new access token.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - refreshToken
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *                 description: The refresh token used to generate a new access token.
  *     responses:
  *       200:
  *         description: New access token generated.
@@ -161,6 +119,18 @@ router.post("/refresh", authController.refresh);
  *       - auth
  *     summary: User logout
  *     description: Logs out the authenticated user.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - refreshToken
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *                 description: The refresh token used to generate a new access token.
  *     responses:
  *       200:
  *         description: Logout successful.

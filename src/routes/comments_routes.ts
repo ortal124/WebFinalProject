@@ -17,6 +17,8 @@ const router = express.Router();
  *   post:
  *     tags:
  *       - comments
+ *     security:
+ *       - bearerAuth: []
  *     summary: Add a comment
  *     description: Adds a new comment to a post.
  *     parameters:
@@ -51,6 +53,8 @@ router.post("/", authMiddleware, commentsController.addComment);
  *   delete:
  *     tags:
  *       - comments
+ *     security:
+ *       - bearerAuth: []
  *     summary: Delete a comment
  *     description: Deletes a comment by ID.
  *     parameters:

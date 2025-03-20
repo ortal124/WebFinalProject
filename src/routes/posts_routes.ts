@@ -69,7 +69,7 @@ router.get('/', postController.getPosts);
  * /user/{id}:
  *   get:
  *     tags:
- *       - users
+ *       - posts
  *     summary: Get posts by user ID
  *     description: Fetches all posts made by a user based on their ID.
  *     parameters:
@@ -94,6 +94,8 @@ router.get('/user/:id', postController.getPostsByUserId);
  *   post:
  *     tags:
  *       - posts
+ *     security:
+ *       - bearerAuth: []
  *     summary: Create a post
  *     description: Creates a new post.
  *     parameters:
@@ -123,6 +125,8 @@ router.post('/', authMiddleware, upload.single('image'), postController.createPo
  *   put:
  *     tags:
  *       - posts
+ *     security:
+ *       - bearerAuth: []
  *     summary: Update an existing post by ID
  *     description: Updates a post's text and/or image based on the provided data. Fields will only be updated if new, non-empty values are provided.
  *     parameters:
@@ -160,6 +164,8 @@ router.put('/:id',authMiddleware, upload.single('image'), postController.updateP
  *   post:
  *     tags:
  *       - posts
+ *     security:
+ *       - bearerAuth: []
  *     summary: Generate a random post
  *     description: Generates a random post with random text and image from a predefined list.
  *     responses:
@@ -176,6 +182,8 @@ router.post('/generate', authMiddleware,upload.single('image'), postController.g
  *   post:
  *     tags:
  *       - posts
+ *     security:
+ *       - bearerAuth: []
  *     summary: Like a post
  *     description: Adds a like to a post.
  *     parameters:
@@ -199,6 +207,8 @@ router.post('/:id/like', authMiddleware, postController.likePost);
  *   delete:
  *     tags:
  *       - posts
+ *     security:
+ *       - bearerAuth: []
  *     summary: Unlike a post
  *     description: Removes a like from a post.
  *     parameters:
@@ -222,6 +232,8 @@ router.delete('/:id/like', authMiddleware, postController.unLikePost);
  *   delete:
  *     tags:
  *       - posts
+ *     security:
+ *       - bearerAuth: []
  *     summary: Delete a post
  *     description: Deletes a post by ID.
  *     parameters:
