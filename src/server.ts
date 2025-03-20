@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import express, { Express } from "express";
 import { appRoutes } from './routes';
-import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './swagger.json';
+import swaggerSpec from "./swagger";
+import swaggerUi from "swagger-ui-express";
 import cors from 'cors';
 
 import dotenv from "dotenv"
@@ -15,7 +15,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/public", express.static("public"));
 app.use("/storage", express.static("storage"));
