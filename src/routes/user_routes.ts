@@ -37,7 +37,7 @@ router.get('/profile/:id', authController.getUserProfile);
 
 /**
  * @swagger
- * /{id}/photo:
+ * /users/{id}/photo:
  *   put:
  *     tags:
  *       - users
@@ -50,12 +50,17 @@ router.get('/profile/:id', authController.getUserProfile);
  *         in: path
  *         required: true
  *         type: string
- *         description: The ID of the user.
- *       - name: photo
- *         in: formData
- *         required: true
- *         type: file
- *         description: The photo to upload.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               photo:
+ *                 type: string
+ *                 format: binary
+ *                 description: The photo to upload.
  *     responses:
  *       200:
  *         description: Profile photo added successfully.
@@ -80,17 +85,17 @@ router.put('/:id/photo', authMiddleware, upload.single('photo'), authController.
  *       - bearerAuth: []
  *     summary: Update user username
  *     description: Update username of a user by ID.
- *     parameters:
- *       - name: body
- *         in: body
- *         required: true
- *         schema:
- *           type: object
- *           required:
- *             - username
- *           properties:
- *             username:
- *               type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *             properties:
+ *               username:
+ *                  type: string
  *     responses:
  *       201:
  *         description: Username updated successfully.
