@@ -19,5 +19,8 @@ initApp().then((app) => {
     }
     https.createServer(options, app).listen(process.env.HTTPS_PORT);
     console.log(`app listening at https://localhost:${process.env.HTTPS_PORT}`);
+    http.createServer(app).listen(process.env.PORT, () => {
+      console.log(`App also listening at http://localhost:${process.env.PORT}`);
+    });
   }
 });
